@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Noticias LibreOS</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #121212; color: #f0f0f0; max-width: 650px; margin: 40px auto; padding: 0 20px; }
+    .tarjeta { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .fecha { font-size: 0.85em; color: #888; }
+    h2 { margin: 8px 0; color: #4da6ff; }
+  </style>
+</head>
+<body>
+  <h1>📢 Mini Noticias LibreOS</h1>
+  <div id="noticias">Cargando noticias...</div>
+
+  <script>
+    fetch('rss.xml')
+      .then(res => res.text())
+      .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+      .then(data => {
+        const items = data.querySelectorAll("item");
+        let html = "";
+        items.forEach(el => {
+          const titulo = el.querySelector("title").textContent;
+          const desc = el.querySelector("description").textContent;
+          const fecha = el.querySelector("pubDate").textContent;
+          html += `<div class="tarjeta"><div class="fecha">${fecha}</div><h2>${titulo}</h2><p>${desc}</p></div>`;
+        });
+        document.getElementById("noticias").innerHTML = html;
+      });
+  </script>
+</body>
+</html>
